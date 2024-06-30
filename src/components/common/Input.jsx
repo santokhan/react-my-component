@@ -1,5 +1,6 @@
 import { twMerge } from "tailwind-merge";
 
+// eslint-disable-next-line react/prop-types
 function Input({ label, id, type, placeholder, className = "", ...props }) {
   return (
     <div className="w-full">
@@ -9,7 +10,7 @@ function Input({ label, id, type, placeholder, className = "", ...props }) {
           type={type}
           name={id}
           className={twMerge(
-            "rounded block border w-full border-gray-300 px-3 py-2.5 text-sm text-gray-900 focus:outline-none focus:border-black",
+            "rounded block w-full px-3 py-2.5 text-sm text-gray-900 focus:outline-non bg-gray-50 shadow-inner focus:outline-none",
             className
           )}
           placeholder={placeholder}
