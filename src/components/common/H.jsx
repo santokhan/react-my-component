@@ -1,5 +1,6 @@
 import { twMerge } from "tailwind-merge";
 
+// eslint-disable-next-line react/prop-types
 const H = ({ variant, children, className = "" }) => {
   let titleClasses = "";
 

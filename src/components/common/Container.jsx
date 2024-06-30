@@ -1,5 +1,6 @@
 import { twMerge } from "tailwind-merge";
 
+// eslint-disable-next-line react/prop-types
 const Container = ({ children, className = "", ...props }) => {
   return (
     <div
