@@ -1,5 +1,28 @@
+# NEXT Navbar
+
+## Step 1: Installation
+
+```bash
+bun add rc-drawer
+```
+
+```bash
+bun add tailwind-merge
+```
+
+```bash
+bun add clsx
+```
+
+```bash
+bun add iconsax-react
+```
+
+## Step 2: Create component
 
 ```jsx
+// MobileNavs.jsx
+
 'use client'
 
 import Drawer from 'rc-drawer'
@@ -43,8 +66,9 @@ const MobileNavs = ({ transparent = false }) => {
 export default MobileNavs
 ```
 
-
 ```jsx
+// NavDropdownButton.jsx
+
 import { twMerge } from "tailwind-merge";
 import { NavLabel } from "./NavItem";
 
@@ -82,8 +106,9 @@ export const Dropdown = ({ children, transparent = false }) => {
 }
 ```
 
-
 ```jsx
+// NavBar.jsx
+
 import Logo, { LogoWhite } from '@/components/Logo'
 import NavList from './NavList'
 import Link from 'next/link'
