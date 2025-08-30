@@ -33,6 +33,103 @@ Uploaded files are displayed with a preview (if image) and can be removed by the
 ## 🛠️ Usage Example
 
 ```jsx
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faUpload } from "@fortawesome/free-solid-svg-icons";
+import useAuth from "../../hooks/useAuth";
+
+const FileUpload = ({ prefix = "uploads", files = [], setFiles, name }) => {
+  const { request } = useAuth();
+  const safeFiles = Array.isArray(files) ? files : [];
+
+  const handleFileChange = async (e) => {
+    const selectedFiles = Array.from(e.target.files || []);
+    if (!selectedFiles.length) return;
+
+    const form = new FormData();
+    selectedFiles.forEach((file) => form.append("files", file));
+    form.append("prefix", prefix);
+
+    try {
+      const res = await request(`/api/v1/upload`, {
+        method: "POST",
+        body: form,
+      });
+      const data = await res.json();
+      const uploaded = Array.isArray(data.files) ? data.files : [];
+      const names = uploaded.map((f) => f?.filename).filter(Boolean);
+
+      setFiles([...safeFiles, ...names]); // merge existing + new
+
+      e.target.value = "";
+    } catch (error) {
+      console.error("❌ Failed to upload file:", error);
+    }
+  };
+
+  const removeFile = (fileName) => {
+    setFiles(safeFiles.filter((f) => f !== fileName));
+  };
+
+  return (
+    <div>
+      <label className="block text-sm font-medium text-gray-600 mb-1">
+        Attachments
+      </label>
+
+      <label className="text-center w-full py-6 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-blue-900 transition">
+        <FontAwesomeIcon
+          icon={faUpload}
+          size="2xl"
+          className="text-blue-900 mb-2"
+        />
+        <p className="text-gray-500 text-md">Drag & drop file here or </p>
+        <p className="text-blue-900 text-xs">Browse file to upload</p>
+        <input
+          name={name}
+          id="file"
+          type="file"
+          multiple
+          onChange={handleFileChange}
+          className="opacity-0"
+        />
+      </label>
+
+      {safeFiles.length > 0 && (
+        <div className="flex flex-wrap gap-3 mt-3">
+          {safeFiles.map((file, idx) => (
+            <div
+              key={idx}
+              className="relative flex items-center gap-2 bg-gray-100 border border-gray-300 rounded-lg p-3"
+            >
+              <img
+                src={
+                  file.startsWith("http") || file.startsWith("/api")
+                    ? file
+                    : `/api/uploads/${file}`
+                }
+                alt={file}
+                className="size-18 object-cover rounded"
+                onError={(e) => (e.currentTarget.style.display = "none")}
+              />
+              <button
+                type="button"
+                onClick={() => removeFile(file)}
+                className="absolute top-1 right-1 cursor-pointer px-2 py-1 text-white rounded-full bg-red-500 hover:bg-red-700 text-sm transition"
+              >
+                ✕
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default FileUpload;
+```
+
+```jsx
 import { useState } from "react";
 import FileUpload from "./components/FileUpload";
 
